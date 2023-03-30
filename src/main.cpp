@@ -46,30 +46,28 @@ void setup()
   Serial.println("Waiting to connect…");
 
   server.on(
-    "/", 
-    HTTP_GET, 
-    [](AsyncWebServerRequest *request)
-    { 
-      request->send(200, "text/html", htmlMessage); 
-    }
-  );
-  
+      "/",
+      HTTP_GET,
+      [](AsyncWebServerRequest *request)
+      {
+        request->send(200, "text/html", htmlMessage);
+      });
+
   server.on(
-    "/post",
-    HTTP_POST,
-    [](AsyncWebServerRequest * request){},
-    NULL,
-    [](AsyncWebServerRequest * request, uint8_t *data, size_t len, size_t index, size_t total) 
-    {
+      "/post",
+      HTTP_POST,
+      [](AsyncWebServerRequest *request) {},
+      NULL,
+      [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
+      {
+        for (size_t i = 0; i < len; i++)
+        {
+          tickets.concat(String(data[i]));
+        }
 
-      for (size_t i = 0; i < len; i++) {
-        tickets.concat(data[i]);
-      }
-
-      Serial.println(tickets);
-      request->send(200);
-    }
-  );
+        Serial.println(tickets);
+        request->send(200);
+      });
 
   server.begin();
   Serial.println("Server listening");
