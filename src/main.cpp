@@ -3,24 +3,24 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 
-AsyncWebServer server(80); // Webserver Object
-const char *ssid = "GD-2";
-const char *password = "9171016278";
+#include "html.h"
 
+#define INPUT_BUTTON 4
+
+const char *ssid = "MTS81231FT_460C";
+const char *password = "20101462";
+
+AsyncWebServer server(80); // Webserver Object
 WiFiClient wifiClient;
 
+String tickets = "";
 byte tries = 10; // Попыток подключения к точке доступа
-int input5 = 5;
-unsigned long lastDebounceTime = 0; // время, когда состояние пина изменилось последний раз
-unsigned long debounceDelay = 50;   // задержка для защиты от дребезга контактов;
 
-#include "html.h"
-const char *PARAM_MESSAGE = "message";
 void setup()
 {
   Serial.begin(9600); // Открыть последовательное соединение
   WiFi.begin(ssid, password);
-  pinMode(input5, INPUT);
+  pinMode(INPUT_BUTTON, INPUT_PULLUP);
   while (--tries && WiFi.status() != WL_CONNECTED)
   {
     delay(500);
@@ -45,19 +45,31 @@ void setup()
 
   Serial.println("Waiting to connect…");
 
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-            { request->send(200, "text/html", htmlMessage); });
+  server.on(
+    "/", 
+    HTTP_GET, 
+    [](AsyncWebServerRequest *request)
+    { 
+      request->send(200, "text/html", htmlMessage); 
+    }
+  );
+  
+  server.on(
+    "/post",
+    HTTP_POST,
+    [](AsyncWebServerRequest * request){},
+    NULL,
+    [](AsyncWebServerRequest * request, uint8_t *data, size_t len, size_t index, size_t total) 
+    {
 
-  server.on("/post", HTTP_POST, [](AsyncWebServerRequest *request)
-            {
-        String message;
-        if (request->hasParam(PARAM_MESSAGE, true)) {
-            message = request->getParam(PARAM_MESSAGE, true)->value();
-        } else {
-            message = "No message sent";
-        }
-        Serial.println(message);
-        request->send(200, "text/html", "Hello, POST: " + message); });
+      for (size_t i = 0; i < len; i++) {
+        tickets.concat(data[i]);
+      }
+
+      Serial.println(tickets);
+      request->send(200);
+    }
+  );
 
   server.begin();
   Serial.println("Server listening");
@@ -65,25 +77,12 @@ void setup()
 
 void loop()
 {
-
-  /*// считываем состояние переключателя в локальную переменную:
-  int reading = digitalRead(input5);
-  // подождите немного и проверьте не изменился ли сигнал
-  // (с LOW на HIGH) с момента последнего нажатия чтобы исключить дребезг:
-  // Если состояние изменилось из-за дребезга или случайного нажатия:
-  if (reading != lastButtonState) {
-  // сбрасываем таймер
-  lastDebounceTime = millis();
+  /*delay(100);
+  if (digitalRead(INPUT_BUTTON)==LOW){
+    delay(5);
+     Serial.println(Ticket);
+     delay(1000);
   }
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-  // вне зависимости от действительного состояния,
-  //если оно длится больше задержки, то принимаем его за текущее:
-  // если состояние кнопки изменилось:
-  if (reading != buttonState) {
-  buttonState = reading;
-  //Печатаем билет
-  if (buttonState == HIGH) {
-  ....
-  }
-  }*/
+  */
+  delay(20000);
 }
