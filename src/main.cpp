@@ -1,11 +1,11 @@
 #include <Arduino.h>
 
-#include <WiFi.h>
+#include <ESP8266WiFi.h>
 #include <ESPAsyncWebServer.h>
 
 #include "html.h"
 
-#define INPUT_BUTTON 4
+#define INPUT_BUTTON D4
 
 const char *ssid = "MTS81231FT_460C";
 const char *password = "20101462";
