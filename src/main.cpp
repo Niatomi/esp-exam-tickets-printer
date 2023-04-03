@@ -80,7 +80,6 @@ void loop()
     current_ticket_index++;
     if (current_ticket_index == array.size()) {
       current_ticket_index = 0;
-      doc.clear();
     }
   }
   delay(5);
