@@ -78,8 +78,10 @@ void loop()
     JsonVariant v = array[current_ticket_index];
     Serial.println(v["ticket"].as<String>());
     current_ticket_index++;
-    if (current_ticket_index == (array.size() - 1))
+    if (current_ticket_index == array.size()) {
       current_ticket_index = 0;
+      doc.clear();
+    }
   }
   delay(5);
 }
