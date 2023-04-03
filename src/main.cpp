@@ -1,20 +1,19 @@
 #include <Arduino.h>
 
-#include <ESP8266WiFi.h>
+#include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 
+#include "AsyncJson.h"
+#include "ArduinoJson.h"
+
 #include "html.h"
+#include "config.h"
 
-#define INPUT_BUTTON D4
-
-const char *ssid = "MTS81231FT_460C";
-const char *password = "20101462";
+#define INPUT_BUTTON 4
 
 AsyncWebServer server(80); // Webserver Object
 WiFiClient wifiClient;
-
-String tickets = "";
-byte tries = 10; // Попыток подключения к точке доступа
+DynamicJsonDocument doc(16000);
 
 void setup()
 {
@@ -46,41 +45,41 @@ void setup()
   Serial.println("Waiting to connect…");
 
   server.on(
-      "/",
-      HTTP_GET,
-      [](AsyncWebServerRequest *request)
-      {
-        request->send(200, "text/html", htmlMessage);
-      });
+    "/", 
+    HTTP_GET, 
+    [](AsyncWebServerRequest *request)
+    { 
+      request->send(200, "text/html", htmlMessage); 
+    }
+  );
 
-  server.on(
-      "/post",
-      HTTP_POST,
-      [](AsyncWebServerRequest *request) {},
-      NULL,
-      [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
-      {
-        for (size_t i = 0; i < len; i++)
-        {
-          tickets.concat(String(data[i]));
-        }
 
-        Serial.println(tickets);
-        request->send(200);
-      });
+  AsyncCallbackJsonWebHandler *handler = new AsyncCallbackJsonWebHandler(
+  "/post-tickets", 
+  [](AsyncWebServerRequest *request, JsonVariant &json) 
+  {
+    doc.clear();
+    doc = json.as<JsonArray>();
+    request->send(200, "application/text", "Tickets saved");
+  });
+  server.addHandler(handler);
 
   server.begin();
   Serial.println("Server listening");
 }
 
+int current_ticket_index = 0;
 void loop()
 {
-  /*delay(100);
-  if (digitalRead(INPUT_BUTTON)==LOW){
-    delay(5);
-     Serial.println(Ticket);
-     delay(1000);
+//  Вот сюда надо добавить обработчик на кнопку
+//  Сейчас он просто работает на то, пустой документ, или нет
+  if (doc.isNull() == false) {
+    JsonArray array = doc.as<JsonArray>();
+    JsonVariant v = array[current_ticket_index];
+    Serial.println(v["ticket"].as<String>());
+    current_ticket_index++;
+    if (current_ticket_index == (array.size() - 1))
+      current_ticket_index = 0;
   }
-  */
-  delay(20000);
+  delay(5);
 }
