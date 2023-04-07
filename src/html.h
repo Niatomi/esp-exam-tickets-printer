@@ -1,16 +1,17 @@
-const char* htmlMessage = R"literal(
+const char *htmlMessage = R"literal(
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset='UTF-8'>
+    <meta charset="UTF-8">
     <title>Устройство АВЭБ</title>
-    <link rel='preconnect' href='https://fonts.googleapis.com'>
-    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-    <link href='https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;700&display=swap' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
   </head>
-    <body class='body'>
+  <body class="body">
       <style>
-                form {
+        form {
         margin-bottom: 20px;
         }
 
@@ -19,7 +20,7 @@ const char* htmlMessage = R"literal(
         margin-bottom: 10px;
         }
 
-        form input[type='text'] {
+        form input[type="text"] {
         padding: 5px;
         font-size: 16px;
         border: 1px solid #ccc;
@@ -73,7 +74,7 @@ const char* htmlMessage = R"literal(
         border: none;
         border-radius: 3px;
         cursor: pointer;
-        }
+        } 
 
 
         .body {
@@ -170,7 +171,7 @@ const char* htmlMessage = R"literal(
         }
 
         .ticket__header {
-        font-size: 24px;
+        font-size: 18px;
         margin-bottom: 10px;
         }
 
@@ -181,12 +182,12 @@ const char* htmlMessage = R"literal(
         }
 
         .ticket__list-item {
-        font-size: 16px;
+        font-size: 18px;
         line-height: 1.5;
         margin-bottom: 5px;
         }
 
-        h1{
+        h1{ 
         padding: 10px;
         border-radius: 3px;
         font-family: Oswald;
@@ -201,36 +202,119 @@ const char* htmlMessage = R"literal(
         }
 
         .h2{
-        font-size: 18px;
+        font-size: 14px;
         }
 
         .buttonsBlock p {
         font-family: Oswald;
         font-weight: 600;
         }
+        .kafedra{
+          margin-bottom: 5px;
+          margin-left: -366px;
+          font-size: 18px;
+          font-family: Oswald;
+        }
+        .predmet{
+          margin-bottom: 5px;
+          margin-left: -344px;
+          font-size: 18px;
+          font-family: Oswald;
+        }
+        .prepod{
+          margin-bottom: 5px;
+          margin-left: -325px;
+          font-size: 18px;
+          font-family: Oswald;
+        }
+        .ZavKaf{
+          margin-bottom: 5px;
+          margin-left: -271px;
+          font-size: 18px;
+          font-family: Oswald;
+        }
+        .kafedraTextArea{
+        resize: none;
+        width: 350px;
+        height: 30px;
+        background-color: aliceblue;
+        border-radius: 10px;
+        padding: 5px;
+        border: 0; 
+        margin-left: -75px;
+        font-family: Oswald;
+        }
+        .predmetTextArea{
+        resize: none;
+        width: 350px;
+        height: 30px;
+        background-color: aliceblue;
+        border-radius: 10px;
+        padding: 5px;
+        border: 0;
+        margin-left: -80px;
+        font-family: Oswald;
+        }
+        .prepodTextArea{
+        resize: none;
+        width: 350px;
+        height: 30px;
+        background-color: aliceblue;
+        border-radius: 10px;
+        padding: 5px;
+        border: 0;
+        margin-left: -80px;
+        font-family: Oswald;
+        }
+        .ZavKafTextArea{
+        resize: none;
+        margin-left: -80px;
+        width: 350px;
+        height: 30px;
+        background-color: aliceblue;
+        border-radius: 10px;
+        padding: 5px;
+        border: 0;
+        font-family: Oswald;
+       }
+       .ticket-h{
+        font-size: 14px;
+
+       }
+
       </style>
-        
-      <h1>Устройство для автоматизированного составления и выдачи экзаменнационных билетов на Esp8266 </h1>
-    
+
+      <h1>Устройство для автоматизированного составления и выдачи экзаменационных билетов на Esp8266 </h1>
+      <p class="kafedra"> Кафедра: </p>  
+      <textarea class="kafedraTextArea" type="text" id="kafedra-input" ></textarea>
+      <p class="predmet"> Дисциплина: </p>  
+      <textarea class="predmetTextArea" type="text" id="predmet-input" ></textarea>
+      <p class="prepod"> Преподаватель: </p>  
+      <textarea class="prepodTextArea" type="text" id="prepod-input" ></textarea>
+      <p class="ZavKaf"> Заведующий кафедрой: 
+      </p>  <textarea class="ZavKafTextArea" type="text" id="ZavKaf-input" ></textarea>
         <legend>Введите вопросы и выберите нужное количество вопросов в билете</legend>
-        <select name=siti class=quastionsNumber >
-        <option value=3 selected=selected >3</option>
-        <option value=4>4</option>
-        <option value=5>5</option>
+        <select name="siti" class="quastionsNumber" >
+        <option value="3" selected="selected" >3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+
+
+         
 
 
 
 
-          <textarea class=quastionsTextArea type=text id=question-input placeholder=Одна строка - один вопрос></textarea>
-        <div class=buttonsBlock>
-          
-          <button class=button type=button id=add-question-button><p>Добавить вопросы</p></button>
-          <button class=button hide button_clean type=button id=remove-question-button><p>Очистить</p></button>
-          <button class=button type=button onclick=printTickets()><p>Разрешить печать</p></button>
-          <button class=button type=button id=generate-tickets-button><p>Сгенерировать билеты</p></button>
+         <textarea class="quastionsTextArea" type="text" id="question-input" placeholder="Одна строка - один вопрос"></textarea>
+        <div class="buttonsBlock">
+         
+          <button class="button" type="button" id="add-question-button"><p>Добавить вопросы</p></button>
+          <button class="button hide button_clean" type="button" id="remove-question-button"><p>Очистить</p></button>
+          <button class="button" type="button" onclick="printTickets()"><p>Разрешить печать</p></button>
+          <button class="button" type="button" id="generate-tickets-button"><p>Сгенерировать билеты</p></button>
         </div>
       
-    <div class=ticket-containe id=ticket-container></div>
+    <div class="ticket-containe" id="ticket-container"></div>
     <script>
                     
             const questionInput = document.getElementById('question-input');
@@ -239,12 +323,15 @@ const char* htmlMessage = R"literal(
             const ticketContainer = document.getElementById('ticket-container');
             const generateTicketsButton = document.getElementById('generate-tickets-button');
             const quastionsNumberInTicket = document.querySelector('.quastionsNumber');
-
+            const kafedraG = document.getElementById('kafedra-input');
+            const predmetG = document.getElementById('predmet-input');
+            const prepodG = document.getElementById('prepod-input');
+            const ZavKafG= document.getElementById('ZavKaf-input');
 
             
             const addQuestions = (questionInput, questions) => {
             let question = questionInput.value;
-            const questionsArray = question.split('\');
+            const questionsArray = question.split('\n');
             if (question) {
                 for (let i = 0; i < questionsArray.length; i++) {
                 if (questionsArray[i] !== '') {
@@ -254,19 +341,35 @@ const char* htmlMessage = R"literal(
                 questionInput.value = '';
             }
             }
-          
+            
             const generateTicketHtml = (arr, index) => {
+              let kafedra = kafedraG.value;
+              let predmet = predmetG.value;
+              let prepod = prepodG.value;
+              let ZavKaf = ZavKafG.value;
+              var today = new Date();
+              var Time=today.toLocaleString();
+
             return `
-            <div class='ticket'>
-            <h2 class=ticket__header>Билет №${index + 1}</h2>
-            <ul class=ticket__list>
-                ${arr.map((q, i) => `<li class=ticket__list-item>${i + 1}) ${q}</li>`).join('')}
+            <div class="ticket">
+            <p class="ticket__h">МИНОБРНАУКИ РОССИИ <p>
+            <p class="ticket__h">Федеральное государственное бюджетное <p>
+            <p class="ticket__h">\n образовательное учреждение высшего образования <p>
+            <p class="ticket__h">САМАРСКИЙ ГОСУДАРСТВЕННЫЙ\n ТЕХНИЧЕСКИЙ УНИВЕРСИТЕТ </p>
+            <h2 class="ticket__header">Экзаменационный билет №${index + 1}\n</h2>
+            <p class="ticket__h">По дисциплине: ${predmet}\n</p>
+            <p class="ticket__h">Кафедра: ${kafedra}\n</p>
+            <ul class="ticket__list">
+                ${arr.map((q, i) => `<li class="ticket__list-item">${i + 1}) ${q}\n</li>`).join('')}
             </ul>
+            <p class="ticket__h">Преподаватель: ${prepod}\n</p>
+            <p class="ticket__h">Заведующий кафедрой: ${ZavKaf}\n</p>
+            <p class="ticket__h"> ${Time}\n</p>
             </div>
                 `
             }
 
-          
+            
             let questions = [];
 
             
@@ -274,15 +377,14 @@ const char* htmlMessage = R"literal(
             const numQuestions = quastionsNumberInTicket.value;
             const shuffledQuestions = questions.sort(() => Math.random() - 0.5); 
             return shuffledQuestions.slice(0, numQuestions);
-            }
 
             function generateTickets() {
             const length = questions.length;
-            const numTickets = Math.round(length / quastionsNumberInTicket.value);
+            const numTickets = Math.round(length / quastionsNumberInTicket.value); 
             ticketContainer.innerHTML = '';
-          
+           
             for (let i = 0; i < numTickets; i++) {
-                
+               
                 const randomQuestions = getRandomQuestions(questions);
                 
                 const remainingQuestions = questions.filter((q) => !randomQuestions.includes(q));
@@ -300,7 +402,7 @@ const char* htmlMessage = R"literal(
             questions = [];
             ticketContainer.innerHTML = '';
             }
-
+            
             const addQuestionsHandler = () => {
             addQuestions(questionInput, questions);
             removeQuestionsButton.classList.toggle('hide');
@@ -308,7 +410,7 @@ const char* htmlMessage = R"literal(
             }
             
             removeQuestionsButton.addEventListener('click', removeQuastionsHandler);
-          
+           
             addQuestionButton.addEventListener('click', addQuestionsHandler);
             
             generateTicketsButton.addEventListener('click', () => {
@@ -318,33 +420,36 @@ const char* htmlMessage = R"literal(
             }
             generateTickets();
             })
-
-              var ArrString=[];
+ 
+            
+            
             function printTickets() {
             
-                const tickets = document.querySelectorAll('.ticket');
-                for (let i = 0; i < tickets.length; i++) {
-                let ticket = tickets[i].textContent;
-                  
-                var ticketGood = ticket.replaceAll(  ,);
-                ArrString.push(ticketGood,@);
-                
-            }
-              var myHeaders = new Headers();
-                myHeaders.append(Content-Type, text/plain);
+            
+            var tickets = document.querySelectorAll('.ticket');
+            var ArrString=[];
 
+            for (let i = 0; i < tickets.length;i++) {
+                let ticket = tickets[i].textContent;  
+                var ticketGood= ticket.replaceAll("  ", "");
+                ArrString.push(ticketGood);    
+            }
+            console.log(ArrString);
+            }
+            
+              var myHeaders= new Headers();
+              myHeaders.append("Content-Type", "application/json");
+              var raw=JSON.stringify(ArrString); 
               var requestOptions= {
                 method: 'POST',
                 headers: myHeaders,
-                body: ArrString,
+                body: raw,
                 redirect: 'follow'
               };
-              fetch(http://192.168.1.101/post, requestOptions)
+              fetch("http://192.168.1.101/post", requestOptions)
               .then(response=> response.text())
               .then(result=> console.log(result))
-              .then(error=> console.log('error',error))
               
-            }
 
     </script>
   </body>
