@@ -294,14 +294,11 @@
     </style>
 
     <h1>Устройство для автоматизированного составления и выдачи экзаменационных билетов на Esp8266 </h1>
-    <p class="kafedra"> Кафедра: </p>
-    <textarea class="kafedraTextArea" type="text" id="kafedra-input"></textarea>
-    <p class="predmet"> Дисциплина: </p>
-    <textarea class="predmetTextArea" type="text" id="predmet-input"></textarea>
-    <p class="prepod"> Преподаватель: </p>
-    <textarea class="prepodTextArea" type="text" id="prepod-input"></textarea>
-    <p class="ZavKaf"> Заведующий кафедрой:
-    </p> <textarea class="ZavKafTextArea" type="text" id="ZavKaf-input"></textarea>
+    <p class="kafedra"> Кафедра: </p> <textarea class="kafedraTextArea" type="text" id="kafedra-input"></textarea>
+    <p class="predmet"> Дисциплина: </p> <textarea class="predmetTextArea" type="text" id="predmet-input"></textarea>
+    <p class="prepod"> Преподаватель: </p> <textarea class="prepodTextArea" type="text" id="prepod-input"></textarea>
+    <p class="ZavKaf"> Заведующий кафедрой: </p> <textarea class="ZavKafTextArea" type="text"
+        id="ZavKaf-input"></textarea>
     <legend>Введите вопросы и выберите нужное количество вопросов в билете</legend>
     <select name="siti" class="quastionsNumber">
         <option value="3" selected="selected">3</option>
@@ -334,7 +331,7 @@
 
         <div class="ticket-containe" id="ticket-container"></div>
         <script>
-
+            //присваиваем элементам переменные
             const questionInput = document.getElementById('question-input');
             const addQuestionButton = document.getElementById('add-question-button');
             const removeQuestionsButton = document.getElementById('remove-question-button');
@@ -346,7 +343,7 @@
             const prepodG = document.getElementById('prepod-input');
             const ZavKafG = document.getElementById('ZavKaf-input');
 
-
+            //Добавление вопросов
             const addQuestions = (questionInput, questions) => {
                 let question = questionInput.value;
                 const questionsArray = question.split('\n');
@@ -359,7 +356,7 @@
                     questionInput.value = '';
                 }
             }
-
+            //Вывод билетов
             const generateTicketHtml = (arr, index) => {
                 let kafedra = kafedraG.value;
                 let predmet = predmetG.value;
@@ -387,86 +384,87 @@
                 `
             }
 
-
+            //Массив вопросов
             let questions = [];
 
-
+            // Функция для получения случайных вопросов
             function getRandomQuestions(questions) {
                 const numQuestions = quastionsNumberInTicket.value;
-                const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
-                return shuffledQuestions.slice(0, numQuestions);
+                const shuffledQuestions = questions.sort(() => Math.random() - 0.5); // перемешиваем массив вопросов
+                return shuffledQuestions.slice(0, numQuestions);// возвращаем первые numQuestions вопросов
+            }
 
-                function generateTickets() {
-                    const length = questions.length;
-                    const numTickets = Math.round(length / quastionsNumberInTicket.value);
-                    ticketContainer.innerHTML = '';
-
-                    for (let i = 0; i < numTickets; i++) {
-
-                        const randomQuestions = getRandomQuestions(questions);
-
-                        const remainingQuestions = questions.filter((q) => !randomQuestions.includes(q));
-
-                        const ticketHTML = generateTicketHtml(randomQuestions, i);
-                        ticketContainer.insertAdjacentHTML('beforeend', ticketHTML);
-
-                        questions = remainingQuestions;
-                    }
+            function generateTickets() {
+                const length = questions.length;
+                const numTickets = Math.round(length / quastionsNumberInTicket.value);
+                ticketContainer.innerHTML = '';
+                // Создание билетов
+                for (let i = 0; i < numTickets; i++) {
+                    // Получение случайных вопросов
+                    const randomQuestions = getRandomQuestions(questions);
+                    // Создание нового массива без выбранных вопросов
+                    const remainingQuestions = questions.filter((q) => !randomQuestions.includes(q));
+                    // Создание HTML-разметки билета
+                    const ticketHTML = generateTicketHtml(randomQuestions, i);
+                    ticketContainer.insertAdjacentHTML('beforeend', ticketHTML);
+                    // Обновление массива вопросов
+                    questions = remainingQuestions;
                 }
+            }
 
-                const removeQuastionsHandler = () => {
-                    addQuestionButton.classList.toggle('hide');
-                    removeQuestionsButton.classList.toggle('hide');
-                    questions = [];
-                    ticketContainer.innerHTML = '';
+            const removeQuastionsHandler = () => {
+                addQuestionButton.classList.toggle('hide');
+                removeQuestionsButton.classList.toggle('hide');
+                questions = [];
+                ticketContainer.innerHTML = '';
+            }
+
+            const addQuestionsHandler = () => {
+                addQuestions(questionInput, questions);
+                removeQuestionsButton.classList.toggle('hide');
+                addQuestionButton.classList.toggle('hide');
+            }
+            // Удалить все вопросы из колонки
+            removeQuestionsButton.addEventListener('click', removeQuastionsHandler);
+            // Добавить в массив вопросов
+            addQuestionButton.addEventListener('click', addQuestionsHandler);
+            // Обработчик клика по кнопке генерации билетов
+            generateTicketsButton.addEventListener('click', () => {
+                if (quastionsNumberInTicket.value <= 0) {
+                    alert('введите число вопросов в билете');
+                    return;
                 }
+                generateTickets();
+            })
 
-                const addQuestionsHandler = () => {
-                    addQuestions(questionInput, questions);
-                    removeQuestionsButton.classList.toggle('hide');
-                    addQuestionButton.classList.toggle('hide');
+            // Функция для печати билетов
+
+            function printTickets() {
+
+                // получить массив билетов
+                var tickets = document.querySelectorAll('.ticket');
+                var ArrString = [];
+
+                for (let i = 0; i < tickets.length; i++) {
+                    let ticket = tickets[i].textContent;
+                    var ticketGood = ticket.replaceAll("  ", "");
+                    ArrString.push(ticketGood);
                 }
+                console.log(ArrString);
+            }
 
-                removeQuestionsButton.addEventListener('click', removeQuastionsHandler);
-
-                addQuestionButton.addEventListener('click', addQuestionsHandler);
-
-                generateTicketsButton.addEventListener('click', () => {
-                    if (quastionsNumberInTicket.value <= 0) {
-                        alert('введите число вопросов в билете');
-                        return;
-                    }
-                    generateTickets();
-                })
-
-
-
-                function printTickets() {
-
-
-                    var tickets = document.querySelectorAll('.ticket');
-                    var ArrString = [];
-
-                    for (let i = 0; i < tickets.length; i++) {
-                        let ticket = tickets[i].textContent;
-                        var ticketGood = ticket.replaceAll("  ", "");
-                        ArrString.push(ticketGood);
-                    }
-                    console.log(ArrString);
-                }
-
-                var myHeaders = new Headers();
-                myHeaders.append("Content-Type", "application/json");
-                var raw = JSON.stringify(ArrString);
-                var requestOptions = {
-                    method: 'POST',
-                    headers: myHeaders,
-                    body: raw,
-                    redirect: 'follow'
-                };
-                fetch("http://192.168.1.101/post", requestOptions)
-                    .then(response => response.text())
-                    .then(result => console.log(result))
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            var raw = JSON.stringify(ArrString);
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+            fetch("http://192.168.1.101/post", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
 
 
         </script>

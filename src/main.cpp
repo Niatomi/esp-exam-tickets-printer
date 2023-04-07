@@ -45,23 +45,23 @@ void setup()
   Serial.println("Waiting to connect…");
 
   server.on(
-    "/", 
-    HTTP_GET, 
-    [](AsyncWebServerRequest *request)
-    { 
-      request->send(200, "text/html", htmlMessage); 
-    }
-  );
-
+      "/",
+      HTTP_GET,
+      [](AsyncWebServerRequest *request)
+      {
+        AsyncWebServerResponse *response = request->beginResponse_P(200, "text/html", htmlMessage);
+        response->addHeader("Server", "WebServer");
+        request->send(response);
+      });
 
   AsyncCallbackJsonWebHandler *handler = new AsyncCallbackJsonWebHandler(
-  "/post-tickets", 
-  [](AsyncWebServerRequest *request, JsonVariant &json) 
-  {
-    doc.clear();
-    doc = json.as<JsonArray>();
-    request->send(200, "application/text", "Tickets saved");
-  });
+      "/post-tickets",
+      [](AsyncWebServerRequest *request, JsonVariant &json)
+      {
+        doc.clear();
+        doc = json.as<JsonArray>();
+        request->send(200, "application/text", "Tickets saved");
+      });
   server.addHandler(handler);
 
   server.begin();
@@ -71,14 +71,16 @@ void setup()
 int current_ticket_index = 0;
 void loop()
 {
-//  Вот сюда надо добавить обработчик на кнопку
-//  Сейчас он просто работает на то, пустой документ, или нет
-  if (doc.isNull() == false) {
+  //  Вот сюда надо добавить обработчик на кнопку
+  //  Сейчас он просто работает на то, пустой документ, или нет
+  if (doc.isNull() == false)
+  {
     JsonArray array = doc.as<JsonArray>();
     JsonVariant v = array[current_ticket_index];
     Serial.println(v["ticket"].as<String>());
     current_ticket_index++;
-    if (current_ticket_index == array.size()) {
+    if (current_ticket_index == array.size())
+    {
       current_ticket_index = 0;
     }
   }
